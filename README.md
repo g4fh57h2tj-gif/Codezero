@@ -1,7 +1,103 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8">// ==========================
+// WORKING TIMER (V10 FIX)
+// ==========================
+
+let total = Number(localStorage.getItem("cz_total")) || 90 * 60;
+let remain = Number(localStorage.getItem("cz_remain")) || total;
+let running = false;
+let timer = null;
+
+const timerText = document.getElementById("timer");
+const startBtn = document.getElementById("startBtn");
+
+function saveTimer(){
+  localStorage.setItem("cz_total", total);
+  localStorage.setItem("cz_remain", remain);
+}
+
+function drawTimer(){
+  const m = String(Math.floor(remain/60)).padStart(2,"0");
+  const s = String(remain%60).padStart(2,"0");
+  timerText.textContent = `${m}:${s}`;
+}
+
+drawTimer();
+
+function setMode(min){
+  total = min * 60;
+  remain = total;
+  saveTimer();
+  drawTimer();
+}
+
+document.getElementById("mode25").onclick = () => setMode(25);
+document.getElementById("mode50").onclick = () => setMode(50);
+document.getElementById("mode90").onclick = () => setMode(90);
+
+startBtn.onclick = () => {
+
+  if(running){
+    clearInterval(timer);
+    running = false;
+    startBtn.textContent = "▶ 시작";
+    saveTimer();
+    return;
+  }
+
+  running = true;
+  startBtn.textContent = "⏸ 일시정지";
+
+  timer = setInterval(()=>{
+
+    if(remain > 0){
+      remain--;
+      drawTimer();
+      saveTimer();
+      return;
+    }
+
+    clearInterval(timer);
+    running = false;
+    startBtn.textContent = "▶ 시작";
+
+    const subject =
+      document.getElementById("focusSubject").value || "수학";
+
+    if(!db.study) db.study = {};
+    if(!db.history) db.history = [];
+
+    db.study[subject] =
+      (db.study[subject] || 0) + total / 3600;
+
+    db.history.unshift(
+      `${subject} · ${total/60}분`
+    );
+
+    saveDB();
+    renderHistory();
+    drawChart();
+
+    alert("🎉 집중 완료!");
+
+    remain = total;
+    saveTimer();
+    drawTimer();
+
+  },1000);
+
+};
+
+document.getElementById("resetBtn").onclick = () => {
+  clearInterval(timer);
+  running = false;
+  remain = total;
+  startBtn.textContent = "▶ 시작";
+  saveTimer();
+  drawTimer();
+};
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>CODE ZERO</title>
@@ -688,95 +784,101 @@ function updateProgress(){
 updateProgress();
 
 // ---------- TIMER ----------
-let total=90*60;
-let remain=90*60;
-let running=false;
-let timer=null;
+// ==========================
+// WORKING TIMER (V10 FIX)
+// ==========================
 
-const timerText=document.getElementById("timer");
-const startBtn=document.getElementById("startBtn");
+let total = Number(localStorage.getItem("cz_total")) || 90 * 60;
+let remain = Number(localStorage.getItem("cz_remain")) || total;
+let running = false;
+let timer = null;
+
+const timerText = document.getElementById("timer");
+const startBtn = document.getElementById("startBtn");
+
+function saveTimer(){
+  localStorage.setItem("cz_total", total);
+  localStorage.setItem("cz_remain", remain);
+}
 
 function drawTimer(){
-  const m=String(Math.floor(remain/60)).padStart(2,"0");
-  const s=String(remain%60).padStart(2,"0");
-  timerText.textContent=m+":"+s;
+  const m = String(Math.floor(remain/60)).padStart(2,"0");
+  const s = String(remain%60).padStart(2,"0");
+  timerText.textContent = `${m}:${s}`;
 }
 
 drawTimer();
 
 function setMode(min){
-  total=min*60;
-  remain=total;
+  total = min * 60;
+  remain = total;
+  saveTimer();
   drawTimer();
 }
 
-document.getElementById("mode25").onclick=()=>setMode(25);
-document.getElementById("mode50").onclick=()=>setMode(50);
-document.getElementById("mode90").onclick=()=>setMode(90);
+document.getElementById("mode25").onclick = () => setMode(25);
+document.getElementById("mode50").onclick = () => setMode(50);
+document.getElementById("mode90").onclick = () => setMode(90);
 
-startBtn.onclick=()=>{
+startBtn.onclick = () => {
 
   if(running){
     clearInterval(timer);
-    running=false;
-    startBtn.textContent="▶ 시작";
+    running = false;
+    startBtn.textContent = "▶ 시작";
+    saveTimer();
     return;
   }
 
-  running=true;
-  startBtn.textContent="⏸ 일시정지";
+  running = true;
+  startBtn.textContent = "⏸ 일시정지";
 
-  timer=setInterval(()=>{
+  timer = setInterval(()=>{
 
-    if(remain>0){
+    if(remain > 0){
       remain--;
       drawTimer();
-    }else{
-
-      clearInterval(timer);
-      running=false;
-      startBtn.textContent="▶ 시작";
-
-      const subject=
-        document.getElementById("focusSubject").value || "수학";
-
-  // 공부시간 누적
-  db.study[subject] = (db.study[subject] || 0) + total/3600;
-  
-  // 날짜별 기록
-  const today = new Date().toISOString().slice(0,10);
-  
-  if(!db.daily) db.daily = {};
-  
-  db.daily[today] = (db.daily[today] || 0) + total/3600;
-  
-  // 저장
-  saveDB();
-
-      db.history.unshift(
-        subject+" · "+(total/60)+"분"
-      );
-
-      saveDB();
-
-      renderHistory();
-      drawChart();
-
-      alert("🎉 집중 완료!");
-
-      remain=total;
-      drawTimer();
+      saveTimer();
+      return;
     }
+
+    clearInterval(timer);
+    running = false;
+    startBtn.textContent = "▶ 시작";
+
+    const subject =
+      document.getElementById("focusSubject").value || "수학";
+
+    if(!db.study) db.study = {};
+    if(!db.history) db.history = [];
+
+    db.study[subject] =
+      (db.study[subject] || 0) + total / 3600;
+
+    db.history.unshift(
+      `${subject} · ${total/60}분`
+    );
+
+    saveDB();
+    renderHistory();
+    drawChart();
+
+    alert("🎉 집중 완료!");
+
+    remain = total;
+    saveTimer();
+    drawTimer();
 
   },1000);
 
 };
 
-document.getElementById("resetBtn").onclick=()=>{
+document.getElementById("resetBtn").onclick = () => {
   clearInterval(timer);
-  running=false;
-  remain=total;
-  startBtn.textContent="▶ 시작";
+  running = false;
+  remain = total;
+  startBtn.textContent = "▶ 시작";
+  saveTimer();
   drawTimer();
 };
 
