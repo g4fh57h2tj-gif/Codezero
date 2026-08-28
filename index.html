@@ -1,10 +1,780 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CODE ZERO V11</title><style>
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#eaf1ff;color:#1f2937} .wrap{max-width:760px;margin:auto;padding:18px}.hero{background:linear-gradient(135deg,#4f7cff,#2563eb);color:#fff;border-radius:24px;padding:24px}.card{background:#fff;border-radius:20px;padding:18px;margin:16px 0;box-shadow:0 8px 20px rgba(0,0,0,.08)}h1{font-size:44px;margin:8px 0}.row{display:flex;justify-content:space-between;align-items:center}.progress{height:10px;background:#dbe7ff;border-radius:99px;overflow:hidden}.fill{height:100%;background:#4f7cff;width:0}.task{display:flex;align-items:center;gap:10px;padding:8px 0}.task input{width:22px;height:22px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}button{border:0;border-radius:12px;padding:12px;background:#4f7cff;color:#fff;font-weight:700}input,textarea{width:100%;padding:10px;border:1px solid #d7e3ff;border-radius:10px;box-sizing:border-box}.srow{display:grid;grid-template-columns:90px 1fr;gap:8px;margin:6px 0}.timer{font-size:54px;text-align:center;font-weight:800;margin:10px 0}.nav{position:sticky;bottom:0;background:#fff;border-radius:16px;padding:8px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.nav button{background:#eef4ff;color:#2563eb}.page{display:none}.page.active{display:block}</style></head><body><div class="wrap"><div class="hero"><div>POLICE ACADEMY</div><h1>——CODE ZERO</h1><div>2028 경찰대 프로젝트</div><div class="row" style="margin-top:14px"><div><div>D-DAY</div><div id="dday" style="font-size:34px;font-weight:800"></div></div><div><div>TODAY</div><div id="today" style="font-size:34px;font-weight:800">0.0h</div></div></div></div>
-<div id="home" class="page active"><div class="card"><h2>CODE ZERO</h2><blockquote>이곳을 거쳐가는 이여, 조국은 그대를 믿노라.</blockquote></div><div class="card"><div class="row"><h2>🎯 Today Mission</h2><span id="pct">0%</span></div><div class="progress"><div class="fill" id="fill"></div></div><div id="tasks"></div></div></div>
-<div id="planner" class="page"><div class="card"><h2>📚 CODE ZERO 시간표</h2><div id="sch"></div><button id="add">+ 일정 추가</button></div></div>
-<div id="focus" class="page"><div class="card"><h2>⏱️ Deep Focus</h2><div class="timer" id="timer">90:00</div><div class="grid2"><button data-m="25">25분</button><button data-m="50">50분</button></div><div style="height:8px"></div><button data-m="90" style="width:100%">90분 집중</button><div style="height:8px"></div><input id="subj" value="수학"><div style="height:8px"></div><div class="grid2"><button id="start">▶ 시작</button><button id="reset">↺ 리셋</button></div><div id="hist" style="margin-top:12px;color:#64748b"></div></div></div>
-<div id="stats" class="page"><div class="card"><h2>📊 Subject Stats</h2><canvas id="cv" width="640" height="180"></canvas></div><div class="card"><h2>💌 Zero Log</h2><textarea id="log" rows="4"></textarea><div style="height:8px"></div><button id="save">저장</button></div></div>
-<div class="nav"><button onclick="show('home')">🏠</button><button onclick="show('planner')">📅</button><button onclick="show('focus')">⏱️</button><button onclick="show('stats')">📊</button></div></div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CODE ZERO</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+:root{
+  --blue:#4F7CFF;
+  --blue2:#2F62F4;
+  --bg:#EEF5FF;
+  --card:#FFFFFF;
+  --text:#16324F;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.app{
+  max-width:430px;
+  margin:auto;
+  padding:18px;
+  padding-bottom:90px;
+}
+
+.hero{
+  background:linear-gradient(135deg,#6EA7FF,#4F7CFF 55%,#2F62F4);
+  color:white;
+  border-radius:28px;
+  padding:22px;
+  box-shadow:0 18px 35px rgba(79,124,255,.25);
+}
+
+.hero-top{
+  font-size:12px;
+  letter-spacing:2px;
+  opacity:.85;
+}
+
+.hero h1{
+  font-size:31px;
+  margin:10px 0 6px;
+}
+
+.hero-sub{
+  font-size:14px;
+  opacity:.95;
+}
+
+.hero-bottom{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:18px;
+}
+
+.stat{
+  background:rgba(255,255,255,.15);
+  border-radius:16px;
+  padding:10px;
+  text-align:center;
+}
+
+.stat span{
+  font-size:10px;
+  opacity:.8;
+}
+
+.stat h2{
+  margin-top:4px;
+  font-size:20px;
+}
+
+.nav{
+  display:flex;
+  background:white;
+  border-radius:18px;
+  padding:6px;
+  margin:18px 0;
+}
+
+.nav button{
+  flex:1;
+  border:none;
+  background:none;
+  padding:10px;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.nav .active{
+  background:var(--blue);
+  color:white;
+}
+
+.page{display:none;}
+.page.active{display:block;}
+
+.card{
+  background:white;
+  border-radius:22px;
+  padding:16px;
+  margin-bottom:14px;
+}
+
+.quote-card{
+  background:white;
+  border-radius:22px;
+  padding:20px;
+  margin-bottom:14px;
+}
+
+.quote-card blockquote{
+  margin:0;
+  font-size:18px;
+  line-height:1.8;
+  font-weight:600;
+  text-align:center;
+}
+
+.task{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:7px 0;
+}
+
+.progress{
+  height:8px;
+  background:#E5E7EB;
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.fill{
+  height:100%;
+  width:0;
+  background:var(--blue);
+}
+
+.row{
+  display:flex;
+  gap:8px;
+  margin-bottom:8px;
+}
+
+.row input:first-child{
+  width:80px;
+}
+
+input[type=text],textarea{
+  width:100%;
+  border:1px solid #D7E3FF;
+  border-radius:12px;
+  padding:10px;
+  font-size:14px;
+}
+
+textarea{
+  resize:none;
+  height:90px;
+}
+
+.btn{
+  width:100%;
+  border:none;
+  background:var(--blue);
+  color:white;
+  padding:12px;
+  border-radius:14px;
+  font-weight:700;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.timer{
+  font-size:48px;
+  text-align:center;
+  font-weight:800;
+  color:var(--blue2);
+  margin:14px 0;
+}
+
+canvas{
+  width:100%;
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <section class="hero">
+
+    <div class="hero-top">
+      POLICE ACADEMY
+    </div>
+
+    <h1>
+      —— CODE ZERO
+    </h1>
+
+    <p class="hero-sub">
+      2028 경찰대 프로젝트
+    </p>
+
+    <div class="hero-bottom">
+
+      <div class="stat">
+        <span>D-DAY</span>
+        <h2 id="dday"></h2>
+      </div>
+
+      <div class="stat">
+        <span>TODAY</span>
+        <h2 id="todayStudy">0.0h</h2>
+      </div>
+
+      <div class="stat">
+        <span>STREAK</span>
+        <h2 id="streak">0🔥</h2>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="quote-card">
+
+    <blockquote>
+      이곳을 거쳐가는 이여,<br>
+      조국은 그대를 믿노라.
+    </blockquote>
+
+  </section>
+
+  <div class="nav">
+
+    <button class="active" onclick="showPage('home',this)">
+      HOME
+    </button>
+
+    <button onclick="showPage('planner',this)">
+      PLAN
+    </button>
+
+    <button onclick="showPage('focus',this)">
+      FOCUS
+    </button>
+
+    <button onclick="showPage('stats',this)">
+      STATS
+    </button>
+
+  </div>
+
+  <!-- HOME -->
+
+  <section id="home" class="page active">
+
+    <div class="card">
+
+      <h3>🎯 Today Mission</h3>
+
+      <div id="tasks"></div>
+
+      <div class="progress">
+        <div class="fill" id="fill"></div>
+      </div>
+
+      <p id="percent">0% 완료</p>
+
+    </div>
+
+    <div class="card">
+
+      <h3>💌 Zero Log</h3>
+
+      <textarea
+        id="log"
+        placeholder="오늘 가장 잘한 일 하나만 적기 🌙"
+      ></textarea>
+
+      <button class="btn" onclick="saveLog()">
+        저장하기
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- PLANNER -->
+
+  <section id="planner" class="page">
+
+    <div class="card">
+
+      <h3>📚 CODE ZERO 시간표</h3>
+
+      <div id="schedule">
+
+        <div class="row">
+          <input type="text" value="09:00">
+          <input type="text" value="수학 개념 90분">
+        </div>
+
+        <div class="row">
+          <input type="text" value="10:40">
+          <input type="text" value="국어 독서 90분">
+        </div>
+
+        <div class="row">
+          <input type="text" value="13:00">
+          <input type="text" value="영단어 40개">
+        </div>
+
+        <div class="row">
+          <input type="text" value="14:00">
+          <input type="text" value="통합사회">
+        </div>
+
+        <div class="row">
+          <input type="text" value="15:00">
+          <input type="text" value="통합과학">
+        </div>
+
+        <div class="row">
+          <input type="text" value="16:00">
+          <input type="text" value="한국사">
+        </div>
+
+        <div class="row">
+          <input type="text" value="19:00">
+          <input type="text" value="JLPT N3">
+        </div>
+
+        <div class="row">
+          <input type="text" value="20:30">
+          <input type="text" value="오답노트">
+        </div>
+
+      </div>
+
+      <button class="btn" onclick="addSchedule()">
+        + 일정 추가
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- FOCUS -->
+
+  <section id="focus" class="page">
+
+    <div class="card">
+
+      <h3>⏱️ Deep Focus</h3>
+
+      <div class="timer" id="timer">
+        90:00
+      </div>
+
+      <div class="grid2">
+
+        <button class="btn" onclick="setMode(25)">
+          25분
+        </button>
+
+        <button class="btn" onclick="setMode(50)">
+          50분
+        </button>
+
+      </div>
+
+      <div style="height:8px;"></div>
+
+      <button class="btn" onclick="setMode(90)">
+        90분 집중
+      </button>
+
+      <div style="height:12px;"></div>
+
+      <input
+        type="text"
+        id="focusSubject"
+        value="수학"
+      >
+
+      <div style="height:12px;"></div>
+
+      <div class="grid2">
+
+        <button class="btn" id="startBtn">
+          ▶ 시작
+        </button>
+
+        <button class="btn" onclick="resetTimer()">
+          ↺ 리셋
+        </button>
+
+      </div>
+
+      <div
+        id="history"
+        style="margin-top:12px;font-size:13px;"
+      ></div>
+
+    </div>
+
+  </section>
+
+  <!-- STATS -->
+
+  <section id="stats" class="page">
+
+    <div class="card">
+
+      <h3>📊 Subject Stats</h3>
+
+      <canvas
+        id="chart"
+        width="320"
+        height="180"
+      ></canvas>
+
+    </div>
+
+  </section>
+
+</div>
+
 <script>
-const KEY='czv11';const init={tasks:{},study:{},hist:[],log:'',schedule:[['09:00','수학 개념 90분'],['10:40','국어 독서 90분'],['13:00','영단어 40개'],['14:00','통합사회'],['15:00','통합과학'],['16:00','한국사'],['19:00','JLPT N3'],['20:30','오답노트']]};const db=Object.assign(init,JSON.parse(localStorage.getItem(KEY)||'{}'));const ex=new Date('2027-11-18');dday.textContent='D-'+Math.ceil((ex-new Date())/86400000);const names=['수학 개념 90분','국어 독서 90분','영단어 40개','통합사회','통합과학','한국사','JLPT N3','오답노트'];function persist(){db.log=log.value;db.schedule=[...document.querySelectorAll('#sch .srow')].map(r=>[r.children[0].value,r.children[1].value]);localStorage.setItem(KEY,JSON.stringify(db));draw()}function drawTasks(){tasks.innerHTML='';names.forEach(n=>{const d=document.createElement('div');d.className='task';const c=document.createElement('input');c.type='checkbox';c.checked=!!db.tasks[n];c.onchange=()=>{db.tasks[n]=c.checked;persist()};const l=document.createElement('label');l.textContent=n;d.append(c,l);tasks.append(d)})}function drawSch(){sch.innerHTML='';db.schedule.forEach(r=>{const d=document.createElement('div');d.className='srow';d.innerHTML=`<input value="${r[0]}"><input value="${r[1]}">`;sch.append(d)})}add.onclick=()=>{db.schedule.push(['00:00','새 일정']);drawSch();persist()};let total=5400,rem=5400,run=false,it;function fmt(){timer.textContent=String(Math.floor(rem/60)).padStart(2,'0')+':'+String(rem%60).padStart(2,'0')}fmt();document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{total=rem=b.dataset.m*60;fmt()});start.onclick=()=>{if(run){clearInterval(it);run=false;start.textContent='▶ 시작';return}run=true;start.textContent='⏸';it=setInterval(()=>{if(rem){rem--;fmt();return}clearInterval(it);run=false;start.textContent='▶ 시작';const s=subj.value||'수학';db.study[s]=(db.study[s]||0)+total/3600;db.hist.unshift(`${s} · ${total/60}분`);rem=total;fmt();persist();alert('집중 완료!')},1000)};reset.onclick=()=>{clearInterval(it);run=false;rem=total;start.textContent='▶ 시작';fmt()};save.onclick=persist;log.value=db.log;window.show=id=>{document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')};function draw(){let d=Object.values(db.tasks).filter(Boolean).length;fill.style.width=d/8*100+'%';pct.textContent=Math.round(d/8*100)+'%';today.textContent=(d*0.5).toFixed(1)+'h';hist.innerHTML=db.hist.slice(0,5).map(x=>'• '+x).join('<br>')||'아직 기록 없음';const x=cv.getContext('2d');x.clearRect(0,0,640,180);['수학','국어','영어','통합사회','통합과학','한국사','JLPT N3','오답'].forEach((s,i)=>{let v=db.study[s]||0,h=Math.max(8,v*28);x.fillStyle='#4f7cff';x.fillRect(20+i*75,150-h,34,h);x.fillStyle='#475569';x.font='12px sans-serif';x.fillText(s.slice(0,2),18+i*75,168)})}drawTasks();drawSch();draw();
-</script></body></html>
+
+const KEY = "codezero";
+
+let db = JSON.parse(
+  localStorage.getItem(KEY) || "{}"
+);
+
+db.tasks = db.tasks || {};
+db.study = db.study || {};
+db.history = db.history || [];
+db.log = db.log || "";
+
+const names = [
+  "수학 개념 90분",
+  "국어 독서 90분",
+  "영단어 40개",
+  "통합사회",
+  "통합과학",
+  "한국사",
+  "JLPT N3",
+  "오답노트"
+];
+
+const exam = new Date("2027-11-18");
+
+document.getElementById("dday").textContent =
+  "D-" +
+  Math.ceil((exam-new Date())/86400000);
+
+function saveDB(){
+  localStorage.setItem(KEY, JSON.stringify(db));
+}
+
+function showPage(id,btn){
+
+  document.querySelectorAll(".page")
+    .forEach(p=>p.classList.remove("active"));
+
+  document.getElementById(id)
+    .classList.add("active");
+
+  document.querySelectorAll(".nav button")
+    .forEach(b=>b.classList.remove("active"));
+
+  btn.classList.add("active");
+}
+
+/* ---------- TASK ---------- */
+
+const taskBox = document.getElementById("tasks");
+
+names.forEach(name=>{
+
+  const div = document.createElement("div");
+  div.className = "task";
+
+  const cb = document.createElement("input");
+  cb.type = "checkbox";
+  cb.checked = !!db.tasks[name];
+
+  cb.onchange = ()=>{
+    db.tasks[name] = cb.checked;
+    saveDB();
+    updateProgress();
+    drawChart();
+  };
+
+  const label = document.createElement("label");
+  label.textContent = name;
+
+  div.append(cb,label);
+
+  taskBox.append(div);
+
+});
+
+function updateProgress(){
+
+  const done =
+    Object.values(db.tasks)
+      .filter(Boolean).length;
+
+  const p =
+    Math.round(done/8*100);
+
+  document.getElementById("fill")
+    .style.width = p+"%";
+
+  document.getElementById("percent")
+    .textContent = p+"% 완료";
+
+  document.getElementById("todayStudy")
+    .textContent = (done*0.5).toFixed(1)+"h";
+
+  document.getElementById("streak")
+    .textContent = done+"🔥";
+
+}
+
+updateProgress();
+
+/* ---------- LOG ---------- */
+
+const log =
+  document.getElementById("log");
+
+log.value = db.log;
+
+function saveLog(){
+
+  db.log = log.value;
+
+  saveDB();
+
+  alert("저장 완료 ✨");
+
+}
+
+/* ---------- SCHEDULE ---------- */
+
+function addSchedule(){
+
+  const row =
+    document.createElement("div");
+
+  row.className="row";
+
+  row.innerHTML=
+    '<input type="text" value="00:00">'+
+    '<input type="text" value="새 일정">';
+
+  document.getElementById("schedule")
+    .append(row);
+
+}
+
+/* ---------- TIMER ---------- */
+
+let total = 90*60;
+let remain = 90*60;
+let running = false;
+let timer = null;
+
+const timerText =
+  document.getElementById("timer");
+
+function drawTimer(){
+
+  const m =
+    String(Math.floor(remain/60))
+      .padStart(2,"0");
+
+  const s =
+    String(remain%60)
+      .padStart(2,"0");
+
+  timerText.textContent =
+    m+":"+s;
+
+}
+
+drawTimer();
+
+function setMode(min){
+
+  total = min*60;
+  remain = total;
+
+  drawTimer();
+
+}
+
+document.getElementById("startBtn")
+.onclick=()=>{
+
+  if(running){
+
+    clearInterval(timer);
+
+    running=false;
+
+    startBtn.textContent="▶ 시작";
+
+    return;
+
+  }
+
+  running=true;
+
+  startBtn.textContent="⏸ 일시정지";
+
+  timer=setInterval(()=>{
+
+    if(remain>0){
+
+      remain--;
+
+      drawTimer();
+
+      return;
+
+    }
+
+    clearInterval(timer);
+
+    running=false;
+
+    startBtn.textContent="▶ 시작";
+
+    const subject =
+      document.getElementById("focusSubject").value;
+
+    db.study[subject] =
+      (db.study[subject]||0)+
+      total/3600;
+
+    db.history.unshift(
+      subject+" · "+total/60+"분"
+    );
+
+    saveDB();
+
+    renderHistory();
+
+    drawChart();
+
+    alert("🎉 집중 완료!");
+
+    remain=total;
+
+    drawTimer();
+
+  },1000);
+
+};
+
+function resetTimer(){
+
+  clearInterval(timer);
+
+  running=false;
+
+  remain=total;
+
+  startBtn.textContent="▶ 시작";
+
+  drawTimer();
+
+}
+
+/* ---------- HISTORY ---------- */
+
+function renderHistory(){
+
+  const box =
+    document.getElementById("history");
+
+  if(db.history.length===0){
+
+    box.textContent =
+      "아직 기록이 없습니다.";
+
+    return;
+
+  }
+
+  box.innerHTML =
+    db.history.slice(0,5)
+      .map(x=>"• "+x)
+      .join("<br>");
+
+}
+
+renderHistory();
+
+/* ---------- CHART ---------- */
+
+function drawChart(){
+
+  const c =
+    document.getElementById("chart");
+
+  const ctx =
+    c.getContext("2d");
+
+  ctx.clearRect(0,0,320,180);
+
+  const subs=[
+    "수학","국어","영어",
+    "통합사회","통합과학",
+    "한국사","JLPT N3","오답"
+  ];
+
+  subs.forEach((s,i)=>{
+
+    const v =
+      db.study[s]||0;
+
+    const h =
+      Math.max(8,v*30);
+
+    ctx.fillStyle="#4F7CFF";
+
+    ctx.fillRect(
+      10+i*38,
+      150-h,
+      24,
+      h
+    );
+
+    ctx.fillStyle="#475569";
+
+    ctx.font="10px sans-serif";
+
+    ctx.fillText(
+      s.replace("통합","통").slice(0,2),
+      10+i*38,
+      165
+    );
+
+  });
+
+}
+
+drawChart();
+
+</script>
+
+</body>
+</html>
