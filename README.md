@@ -740,8 +740,18 @@ startBtn.onclick=()=>{
       const subject=
         document.getElementById("focusSubject").value || "수학";
 
-      db.study[subject]=(db.study[subject]||0)+
-        total/3600;
+  // 공부시간 누적
+  db.study[subject] = (db.study[subject] || 0) + total/3600;
+  
+  // 날짜별 기록
+  const today = new Date().toISOString().slice(0,10);
+  
+  if(!db.daily) db.daily = {};
+  
+  db.daily[today] = (db.daily[today] || 0) + total/3600;
+  
+  // 저장
+  saveDB();
 
       db.history.unshift(
         subject+" · "+(total/60)+"분"
