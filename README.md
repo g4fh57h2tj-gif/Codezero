@@ -725,6 +725,7 @@ if(!db.history) db.history=[];
 
 function saveDB(){
   localStorage.setItem("codezero", JSON.stringify(db));
+  saveTimer();
 }
 
 // ---------- ZERO LOG ----------
