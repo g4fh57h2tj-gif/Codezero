@@ -220,13 +220,13 @@ textarea{
 
   <section class="hero">
 
-    <small>POLICE ACADEMY · AURORA</small>
+    <small>POLICE ACADEMY · 경찰대학 </small>
 
-    <h1>🛡️ CODE ZERO</h1>
+    <h1> CODE ZERO</h1>
 
     <p>
-      <strong>Zero에서 시작해도, 끝은 경찰대.</strong><br>
-      오늘의 1시간이 미래의 계급장을 만든다.
+      <strong>이곳을 거쳐가는 이여, 조국은 그대를 믿노라.</strong><br>
+      조국(祖國)·정의(正義)·명예(名譽)
     </p>
 
     <div class="stats">
@@ -243,7 +243,7 @@ textarea{
 
       <div class="stat">
         <span>STREAK</span>
-        <b id="streak">1🔥</b>
+        <b id="Persistence">1🔥</b>
       </div>
 
     </div>
@@ -278,32 +278,32 @@ textarea{
 
 <div class="task">
   <input type="checkbox" id="t2">
-  <label for="t2">국어 독서 2지문</label>
+  <label for="t2">국어 90분 </label>
 </div>
 
 <div class="task">
   <input type="checkbox" id="t3">
-  <label for="t3">영어 단어 80개</label>
+  <label for="t3">영어 단어 40개</label>
 </div>
 
 <div class="task">
   <input type="checkbox" id="t4">
-  <label for="t4">통합사회 1단원</label>
+  <label for="t4">통합사회 개념</label>
 </div>
 
 <div class="task">
   <input type="checkbox" id="t5">
-  <label for="t5">통합과학 개념 복습</label>
+  <label for="t5">통합과학 개념</label>
 </div>
 
 <div class="task">
   <input type="checkbox" id="t6">
-  <label for="t6">한국사 30분</label>
+  <label for="t6">한국사 한 강</label>
 </div>
 
 <div class="task">
   <input type="checkbox" id="t7">
-  <label for="t7">JLPT N3 문법</label>
+  <label for="t7">JLPT N3 단어 40개</label>
 </div>
 
 <div class="task">
@@ -321,11 +321,11 @@ textarea{
 
     <div class="card">
 
-      <h3>💌 Zero Log</h3>
+      <h3>Zero — Log</h3>
 
       <textarea
         id="zeroLog"
-        placeholder="오늘 가장 잘한 일 하나만 적기 🌙"
+        placeholder="오늘 가장 잘한 일 하나"
       ></textarea>
 
       <button class="btn" id="saveLog">
@@ -352,7 +352,7 @@ textarea{
 
 <div class="row">
   <input type="text" value="10:40">
-  <input type="text" value="국어 독서 2지문">
+  <input type="text" value="국어 90분">
 </div>
 
 <div class="row">
@@ -362,7 +362,7 @@ textarea{
 
 <div class="row">
   <input type="text" value="13:00">
-  <input type="text" value="영어 단어 80개">
+  <input type="text" value="영어 단어 40개">
 </div>
 
 <div class="row">
@@ -389,7 +389,7 @@ textarea{
   <input type="text" value="20:30">
   <input type="text" value="오답노트">
 </div>
-      </div>
+     <!-- </div> -->
 
       <button class="btn" id="addSchedule">
         + 시간표 추가
@@ -410,7 +410,7 @@ textarea{
     <h3>⏱️ Deep Focus</h3>
 
     <p style="color:#64748B;font-size:13px;margin-bottom:10px;">
-      오늘의 1시간이 미래의 계급장을 만든다.
+      생각하는대로 살지 않으면, 사는대로 생각하게 된다.
     </p>
 
     <div class="timer" id="timer">
@@ -432,7 +432,7 @@ textarea{
     <div style="height:8px"></div>
 
     <button class="btn" id="mode90">
-      90분 집중
+      90분
     </button>
 
     <div style="height:12px"></div>
@@ -546,7 +546,6 @@ textarea{
 
     </div>
 
-  </div>
 
   <div class="card">
 
