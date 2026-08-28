@@ -471,11 +471,16 @@ const names = [
   "오답노트"
 ];
 
-const exam = new Date("2027-11-18");
+const today = new Date();
+const exam = new Date(2027, 10, 18); // 11월 = 10
+
+today.setHours(0,0,0,0);
+exam.setHours(0,0,0,0);
+
+const diff = Math.round((exam - today) / 86400000);
 
 document.getElementById("dday").textContent =
-  "D-" +
-  Math.ceil((exam-new Date())/86400000);
+  diff === 0 ? "D-DAY" : `D-${diff}`;
 
 function saveDB(){
   localStorage.setItem(KEY, JSON.stringify(db));
